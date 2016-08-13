@@ -73,8 +73,8 @@ FriendlyChat.prototype.loadMessages = function() {
     var val = data.val();
     this.displayMessage(data.key, val.name, val.text, val.photoUrl, val.imageUrl);
   }.bind(this);
-  this.messagesRef.limitToLast(12).on('child_added',setMessage);
-  this.messageRef.limitToLast(12).on('child_changed',setMessage);
+  this.messagesRef.limitToLast(20).on('child_added',setMessage);
+  this.messageRef.limitToLast(20).on('child_changed',setMessage);
 };
 
 // Saves a new message on the Firebase DB.
@@ -248,6 +248,8 @@ FriendlyChat.prototype.displayMessage = function(key, name, text, picUrl, imageU
   }
   div.querySelector('.name').textContent = name;
   var messageElement = div.querySelector('.message');
+  var modalImg = document.getElementById("img01");
+  var modal = document.getElementById('myModal');
   if (text) { // If the message is text.
     messageElement.textContent = text;
     // Replace all line breaks by <br>.
@@ -257,7 +259,15 @@ FriendlyChat.prototype.displayMessage = function(key, name, text, picUrl, imageU
     image.addEventListener('load', function() {
       this.messageList.scrollTop = this.messageList.scrollHeight;
     }.bind(this));
+    console.log(imageUri)
     this.setImageUrl(imageUri, image);
+    image.onclick = function () {
+      modal.style.display = "block";
+      modalImg.src = this.src;
+    }
+    modal.onclick = function () {
+     modal.style.display='none'
+    }
     messageElement.innerHTML = '';
     messageElement.appendChild(image);
   }
